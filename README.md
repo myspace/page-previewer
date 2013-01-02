@@ -1,4 +1,6 @@
-# page-previewer -- Simple web page scraper and returns basic info like title, description, images, videos using request and cheerio modules.
+# page-previewer
+
+Simple web page scraper and returns basic info like title, description, images, videos using request and cheerio modules.
 
 ## Install
 
