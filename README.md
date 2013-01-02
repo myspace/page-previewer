@@ -40,4 +40,4 @@ returns
   images: [ 'http://www.google.com/intl/en_ALL/images/srpr/logo1w.png' ],
   videos: undefined,
   audios: undefined }
- ```json
+ ```
