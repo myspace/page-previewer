@@ -16,5 +16,7 @@
     "page-previewer"
   ],
   "author": "Satheesh Natesan",
-  "license": "BSD"
+  "license": {
+  	"type: "MIT"
+  }
 }
