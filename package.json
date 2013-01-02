@@ -17,6 +17,7 @@
   ],
   "author": "Satheesh Natesan",
   "license": {
-  	"type: "MIT"
+  	"type": "MIT",
+  	"url": "https://github.com/snatesan/page-previewer/blob/master/LICENSE"
   }
 }
