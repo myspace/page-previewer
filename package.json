@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node test.js"
   },
-  "repository": "",
+  "repository": "git://github.com/snatesan/page-previewer.git",
   "dependencies": {
 	"request": "2.12.0",
   	"cheerio": "0.10.3"
