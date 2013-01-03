@@ -12,6 +12,8 @@
   	"cheerio": "0.10.3"
   },
   "keywords": [
+    "page preview",
+    "link preview",
     "link-previewer",
     "page-previewer"
   ],
