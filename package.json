@@ -1,6 +1,6 @@
 {
   "name": "page-previewer",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "description": "Scrapes a web page and returns preview information",
   "main": "./index.js",
   "scripts": {

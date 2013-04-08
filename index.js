@@ -42,7 +42,7 @@ function parseResponse(body, url) {
 		mediaType,
 		images,
 		videos;
-	
+
 	doc = cheerio.load(body);
 	title = doc("title").text();
 		
@@ -82,12 +82,15 @@ function getImages(doc, pageUrl) {
 	if(nodes.length) {
 		images = [];
 		nodes.each(function(index, node){
-			images.push(node.attribs["content"]);
+            src = node.attribs["content"];
+            src = urlObj.resolve(pageUrl, src);
+			images.push(src);
 		});
 	} else {
 		src = doc("link[rel=image_src]").attr("href");
 		if(src) {
-			images = [ src ];
+            src = urlObj.resolve(pageUrl, src);
+            images = [ src ];
 		} else {
 			nodes = doc("img");
 			if(nodes.length) {
