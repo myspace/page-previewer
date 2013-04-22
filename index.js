@@ -45,7 +45,7 @@ function parseResponse(body, url) {
 
 	doc = cheerio.load(body);
 	title = doc("title").text();
-		
+
 	description = doc("meta[name=description]").attr("content");
 	if(description === undefined) {
 		description = doc("meta[name=Description]").attr("content");
@@ -74,25 +74,30 @@ function getMediaType(doc) {
 
 var minImageSize = 50;
 function getImages(doc, pageUrl) {
-	var images, nodes, src,
+	var images = [], nodes, src,
 		width, height,
 		dic;
 
 	nodes = doc("meta[property='og:image']");
+
 	if(nodes.length) {
-		images = [];
 		nodes.each(function(index, node){
             src = node.attribs["content"];
-            src = urlObj.resolve(pageUrl, src);
-			images.push(src);
+            if(src){
+                src = urlObj.resolve(pageUrl, src);
+                images.push(src);
+            }
 		});
-	} else {
+	}
+	
+	if(images.length <= 0) {
 		src = doc("link[rel=image_src]").attr("href");
 		if(src) {
             src = urlObj.resolve(pageUrl, src);
             images = [ src ];
 		} else {
 			nodes = doc("img");
+
 			if(nodes.length) {
 				dic = {};
 				images = [];
