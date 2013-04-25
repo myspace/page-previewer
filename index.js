@@ -44,12 +44,9 @@ function parseResponse(body, url) {
 		videos;
 
 	doc = cheerio.load(body);
-	title = doc("title").text();
+	title = getTitle(doc);
 
-	description = doc("meta[name=description]").attr("content");
-	if(description === undefined) {
-		description = doc("meta[name=Description]").attr("content");
-	}
+	description = getDescription(doc);
 
 	mediaType = getMediaType(doc);
 
@@ -58,6 +55,30 @@ function parseResponse(body, url) {
 	videos = getVideos(doc);
 
 	return createResponseData(url, false, title, description, "text/html", mediaType, images, videos);
+}
+
+function getTitle(doc){
+    var title = doc("title").text();
+
+    if(title === undefined || !title){
+        title = doc("meta[property='og:title']").attr("content");
+    }
+
+    return title;
+}
+
+function getDescription(doc){
+    var description = doc("meta[name=description]").attr("content");
+
+    if(description === undefined) {
+        description = doc("meta[name=Description]").attr("content");
+
+        if(description === undefined) {
+            description = doc("meta[property='og:description']").attr("content");
+        }
+    }
+
+    return description;
 }
 
 function getMediaType(doc) {
@@ -89,7 +110,7 @@ function getImages(doc, pageUrl) {
             }
 		});
 	}
-	
+
 	if(images.length <= 0) {
 		src = doc("link[rel=image_src]").attr("href");
 		if(src) {
