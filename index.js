@@ -1,7 +1,8 @@
 var request = require("request"),
 	adblock = require("./lib/adblock.js"),
 	urlObj = require("url"),
-	cheerio = require("cheerio");
+	cheerio = require("cheerio"),
+    iconv = require('iconv-lite');
 
 
 function getPreview(urlObj, callback) {
@@ -17,10 +18,12 @@ function getPreview(urlObj, callback) {
 	var req = request( {
 		uri: url,
 		proxy: proxy,
+		encoding: null,
 		timeout: 10000
 	}, function(err, response, body) {
 		if(!err && response.statusCode === 200 && body) {
-			callback(null, parseResponse(body, url));
+			var decodedBody = decodeBody(response, body);
+            callback(null, parseResponse(decodedBody, url));
 		} else {
 			callback(null, createResponseData(url, true));
 		}
@@ -33,6 +36,45 @@ function getPreview(urlObj, callback) {
 			callback(null, parseMediaResponse(res, contentType, url) );
 		}
 	});
+}
+
+function getCharset(response, bodyBuffer) {
+    var contentTypeHeader = response.headers["content-type"];
+    
+    var doc = cheerio.load(bodyBuffer.toString());
+    var contentTypeMeta = doc("meta[http-equiv='Content-Type']").attr("content");
+
+    var contentType = "";
+    if (contentTypeMeta) {
+        contentType = contentTypeMeta;
+    } else if (contentTypeHeader) {
+        contentType = contentTypeHeader;
+    }
+
+    var regex = /charset=([^"']+)/;
+    var match = contentType.match(regex);
+
+    if (match && match.length > 0) {
+        var charset = match[1];
+        return charset;
+    } else {
+        return null;
+    }
+}
+
+function decodeBody(response, bodyBuffer) {
+    var charset = getCharset(response, bodyBuffer);
+
+    if (charset) {
+        try {
+            var decodedBody = iconv.decode(bodyBuffer, charset);
+            return decodedBody;
+        } catch (exception) {
+            return bodyBuffer.toString('utf8');
+        }
+    } else {
+        return bodyBuffer.toString('utf8');
+    }
 }
 
 function parseResponse(body, url) {
