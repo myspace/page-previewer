@@ -58,7 +58,7 @@ function parseResponse(body, url) {
 }
 
 function getTitle(doc){
-    var title = doc("title").text();
+    var title = doc("head title").text();
 
     if(title === undefined || !title){
         title = doc("meta[property='og:title']").attr("content");
